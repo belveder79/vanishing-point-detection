@@ -26,7 +26,10 @@ std::vector<cv::Vec4f> aLSD::applyLSDetector(cv::Mat image, double minLineLength
   cv::Mat temp;
   // convert BGR color to gray color
   TIME_COUNT(_time_values[0]){
-      cv::cvtColor(image, temp, CV_BGR2GRAY);
+      if(image.dims > 2)
+          cv::cvtColor(image, temp, CV_BGR2GRAY);
+      else
+          temp = image;
   }
 
   double *img_pointer;
