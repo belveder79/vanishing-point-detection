@@ -25,7 +25,7 @@ std::vector<cv::Point2f> RCSCfMIoMW::applyVPDetector(
 
   std::vector<int> line_cluster;
   std::vector<cv::Point2f> vps = RANSAC(lines_segments, lines,
-     ransac_iterations_, line_cluster, error_threshold_);
+     ransac_iterations_, *line_id_by_vp, error_threshold_);
 
   return vps;
 }

@@ -57,3 +57,5 @@ add_subdirectory(${source_path})
 ###############
 enable_testing()
 add_subdirectory(${test_path})
+
+add_subdirectory(mextest)

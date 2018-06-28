@@ -1,4 +1,4 @@
-#include <opencv2/core/core.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 
 namespace vanishing_point{
@@ -6,7 +6,7 @@ namespace vanishing_point{
 class LineSegmentDetector{
 
   public:
-    virtual std::vector<cv::Vec4f> applyLSDetector(cv::Mat image) = 0;
+    virtual std::vector<cv::Vec4f> applyLSDetector(cv::Mat image, double minLineLength = 0.0) = 0;
 
     const std::vector<std::string> getTimeSessionNames(){
       return _time_sessions;

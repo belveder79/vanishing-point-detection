@@ -9,7 +9,7 @@ class RCSCfMIoMW : public VanishingPointDetection{
 
   public:
     RCSCfMIoMW(uint ransac_iterations = 500, double error_threshold = 0.1);
-
+    virtual ~RCSCfMIoMW() {}
     std::vector<cv::Point2f> applyVPDetector(
                                   cv::Mat image,
                                   std::vector<cv::Vec4f> lines_segments,

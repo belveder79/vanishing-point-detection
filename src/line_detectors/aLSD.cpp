@@ -19,14 +19,14 @@ aLSD::aLSD(){
   _time_values = std::vector<double>(_time_sessions.size(), 0);
 }
 
-std::vector<cv::Vec4f> aLSD::applyLSDetector(cv::Mat image){
+std::vector<cv::Vec4f> aLSD::applyLSDetector(cv::Mat image, double minLineLength){
 
   // _time_sessions[0] =
   // begin_time = std::clock();
   cv::Mat temp;
   // convert BGR color to gray color
   TIME_COUNT(_time_values[0]){
-  cv::cvtColor(image, temp, CV_BGR2GRAY);
+      cv::cvtColor(image, temp, CV_BGR2GRAY);
   }
 
   double *img_pointer;
@@ -35,9 +35,10 @@ std::vector<cv::Vec4f> aLSD::applyLSDetector(cv::Mat image){
 
 
   TIME_COUNT(_time_values[1]){
-  /* create a simple image: left half black, right half gray */
-  img_pointer = (double *) malloc(X * Y * sizeof(double));
+      /* create a simple image: left half black, right half gray */
+      img_pointer = (double *) malloc(X * Y * sizeof(double));
   }
+    
   if (img_pointer == NULL) {
     fprintf(stderr, "error: not enough memory\n");
     exit(EXIT_FAILURE);
@@ -45,25 +46,29 @@ std::vector<cv::Vec4f> aLSD::applyLSDetector(cv::Mat image){
 
   int x, y;
   TIME_COUNT(_time_values[2]){
-  for (x = 0; x < X; x++)
-    for (y = 0; y < Y; y++)
-      img_pointer[x + y * X] = temp.at<uint8_t>(y, x); /* image(x,y) */
+      for (x = 0; x < X; x++)
+          for (y = 0; y < Y; y++)
+              img_pointer[x + y * X] = temp.at<uint8_t>(y, x); /* image(x,y) */
   }
   /* LSD call */
   int n;
   double *out;
   TIME_COUNT(_time_values[3]){
-  out = lsd(&n, img_pointer, X, Y);
+      out = lsd(&n, img_pointer, X, Y);
   }
-
 
   std::vector<cv::Vec4f> line_segments;
   TIME_COUNT(_time_values[4]){
-  for (int i = 0; i < n; i++) {
-    cv::Vec4f line_segment(out[7 * i + 0], out[7 * i + 1], // point1
-                            out[7 * i + 2], out[7 * i + 3]); // point2
-    line_segments.push_back(line_segment);
-  }
+      for (int i = 0; i < n; i++) {
+          double d = sqrt(((out[7 * i + 0] - out[7 * i + 2])*(out[7 * i + 0] - out[7 * i + 2])) + 
+                        ((out[7 * i + 1] - out[7 * i + 3])*(out[7 * i + 1] - out[7 * i + 3])));
+          if(d > minLineLength)
+          {
+            cv::Vec4f line_segment(out[7 * i + 0], out[7 * i + 1], // point1
+                                    out[7 * i + 2], out[7 * i + 3]); // point2
+            line_segments.push_back(line_segment);
+          }
+      }
   }
 
   /* free memory */

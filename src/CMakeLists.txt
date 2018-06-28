@@ -4,10 +4,10 @@
 find_package(OpenCV REQUIRED)
 
 ## ADD SUBDIRECTORIES FROM LIBRARY
-# include_directories()
+include_directories(${OpenCV_INCLUDE_DIRS})
 # add_subdirectory()
 
-add_library(time_count_tools TimeCountTools.hpp)
+add_library(time_count_tools TimeCountTools.cpp)
 set_target_properties(time_count_tools PROPERTIES LINKER_LANGUAGE CXX)
 set(SOURCE_LIBS_LOCAL time_count_tools ${OpenCV_LIBS})
 
